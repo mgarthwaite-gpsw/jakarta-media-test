@@ -1,6 +1,3 @@
-#!usr/bin/python
-
-
 import os
 from functools import partial
 from multiprocessing import Pool
@@ -101,5 +98,7 @@ class JDKLibTest():
             sys.exit(0)
 
 if (__name__ == "__main__"):
-     testWrapper = JDKLibTest()
-     testWrapper.test_runMediaTest()
+    os.chdir("..")
+    os.chdir("..")
+    testWrapper = JDKLibTest()
+    testWrapper.test_runMediaTest()
