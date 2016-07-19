@@ -11,7 +11,7 @@ def runWinTest(pictureList,videoList,iterationOfLoop):
     if os.path.exists("TestNum%i" % iterationOfLoop): print "Directory exist"
     else:
         os.makedirs("TestNum%i" % iterationOfLoop)
-    shutil.copy2("gpsdk_jakarta_unittest", "TestNum%i" % iterationOfLoop)
+    shutil.copy2("gpsdk_jakarta_unittest.exe", "TestNum%i" % iterationOfLoop)
 
     if iterationOfLoop >= len(pictureList):
         shutil.copy(pictureList[0], "TestNum%i\\tmp.jpg" % iterationOfLoop)
@@ -28,7 +28,7 @@ def runWinTest(pictureList,videoList,iterationOfLoop):
     time.sleep(10)
     os.chdir("TestNum%i" % iterationOfLoop)
     time.sleep((((iterationOfLoop*2)/3)%10)+1)
-    os.system("gpsdk_jakarta_unittest -v -j qa -dcomp 511 -dlevel 555 > runLog%i.log 2>&1" % (iterationOfLoop))
+    os.system("gpsdk_jakarta_unittest.exe -v -j qa -dcomp 511 -dlevel 555 > runLog%i.log 2>&1" % (iterationOfLoop))
     os.system("echo 'PID:%s TestNum%i completed using %s AND %s' >> runLog%i.log" % (os.getpid(), iterationOfLoop , videoList[videoID], pictureList[pictID], iterationOfLoop))
     os.chdir("..")
     return None
