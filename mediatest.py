@@ -98,7 +98,5 @@ class JDKLibTest():
             sys.exit(0)
 
 if (__name__ == "__main__"):
-    os.chdir("..")
-    os.chdir("..")
     testWrapper = JDKLibTest()
     testWrapper.test_runMediaTest()
