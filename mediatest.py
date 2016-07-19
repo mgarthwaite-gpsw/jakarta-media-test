@@ -73,6 +73,7 @@ def runWinTest(pictureList,videoList,iterationOfLoop):
     time.sleep((((iterationOfLoop*2)/3)%10)+1)
     os.system("gpsdk_jakarta_unittest.exe -v -j qa -dcomp 511 -dlevel 555 > runLog%i.log 2>&1" % (iterationOfLoop))
     os.system("echo 'PID:%s TestNum%i completed using %s AND %s' >> runLog%i.log" % (os.getpid(), iterationOfLoop , videoList[videoID], pictureList[pictID], iterationOfLoop))
+    parseLog(iterationOfLoop)
     os.chdir("..")
     return None
 
@@ -133,7 +134,7 @@ class JDKLibTest():
     def aggregateWinLogs(self, listCount):
         self.parsedLog = []
         for i in range(0,listCount):
-            with open("TestNum%i\\runLog%i.log" % (i,i),"r") as file:
+            with open("TestNum%i\\ParsedLog%i.log" % (i,i),"r") as file:
                 text = file.readlines()
                 for line in range(0,len(text)):
                     self.parsedLog.append(text[line])
