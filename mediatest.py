@@ -8,26 +8,25 @@ import sys
 
 
 def runWinTest(pictureList,videoList,iterationOfLoop):
-    if os.path.exists("..\TestNum%i" % iterationOfLoop): print "Directory exist"
+    if os.path.exists("TestNum%i" % iterationOfLoop): print "Directory exist"
     else:
         os.makedirs("TestNum%i" % iterationOfLoop)
     shutil.copy2("gpsdk_jakarta_unittest", "TestNum%i" % iterationOfLoop)
 
     if iterationOfLoop >= len(pictureList):
-        shutil.copy(pictureList[0], "..\TestNum%i\\tmp.jpg" % iterationOfLoop)
+        shutil.copy(pictureList[0], "TestNum%i\\tmp.jpg" % iterationOfLoop)
         pictID = 0
     else:
-        shutil.copy(pictureList[iterationOfLoop], "..\TestNum%i\\tmp.jpg" % iterationOfLoop)
+        shutil.copy(pictureList[iterationOfLoop], "TestNum%i\\tmp.jpg" % iterationOfLoop)
         pictID = iterationOfLoop
     if iterationOfLoop >= len(videoList):
-        shutil.copy(videoList[0], "..\TestNum%i\\tmp.mp4" % iterationOfLoop)
+        shutil.copy(videoList[0], "TestNum%i\\tmp.mp4" % iterationOfLoop)
         videoID = 0
     else:
-        shutil.copy(videoList[iterationOfLoop], "..\TestNum%i\\tmp.mp4" % iterationOfLoop)
+        shutil.copy(videoList[iterationOfLoop], "TestNum%i\\tmp.mp4" % iterationOfLoop)
         videoID = iterationOfLoop
     time.sleep(10)
-
-    os.chdir("TestNum%i\\" % iterationOfLoop)
+    os.chdir("TestNum%i" % iterationOfLoop)
     time.sleep((((iterationOfLoop*2)/3)%10)+1)
     os.system("gpsdk_jakarta_unittest -v -j qa -dcomp 511 -dlevel 555 > runLog%i.log 2>&1" % (iterationOfLoop))
     os.system("echo 'PID:%s TestNum%i completed using %s AND %s' >> runLog%i.log" % (os.getpid(), iterationOfLoop , videoList[videoID], pictureList[pictID], iterationOfLoop))
