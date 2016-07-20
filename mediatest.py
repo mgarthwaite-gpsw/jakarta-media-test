@@ -165,7 +165,6 @@ class JDKLibTest():
         pool.map(func,range(0,listCount))
         pool.close()
         pool.join()
-        runTest(pictureList,videoList,0)
         if(os.name == "posix"):
             logFile = self.aggregatePosixLogs(listCount)
         else:
