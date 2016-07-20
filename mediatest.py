@@ -46,22 +46,20 @@ def parseLog(iterationOfLoop):
     shortLog.close()
 
 def runTest(server, pictureList, videoList, iterationOfLoop):
-    dirPath = "TestNum%i" % iterationOfLoop
+
 
     if(os.name == "posix"):
+        dirPath = "TestNum%i" % iterationOfLoop
         mp4Path = "./TestNum%i/tmp.mp4" % iterationOfLoop
         jpgPath = "./TestNum%i/tmp.jpg" % iterationOfLoop
         executable = "./gpsdk_jakarta_unittest"
     else:
+        dirPath = ".\\TestNum%i" % iterationOfLoop
         mp4Path = "TestNum%i\\tmp.mp4" % iterationOfLoop
         jpgPath = "TestNum%i\\tmp.jpg" % iterationOfLoop
         executable = "gpsdk_jakarta_unittest.exe"
 
-    if os.path.exists(dirPath):
-        shutil.copy(executable, dirPath)
-    else:
-        os.makedirs(dirPath)
-        shutil.copy(executable, dirPath)
+
 
     if iterationOfLoop >= len(pictureList):
         shutil.copy(pictureList[0], jpgPath)
@@ -75,6 +73,12 @@ def runTest(server, pictureList, videoList, iterationOfLoop):
     else:
         shutil.copy(videoList[iterationOfLoop], mp4Path)
         videoID = iterationOfLoop
+
+    if os.path.exists(dirPath):
+        shutil.copy(executable, dirPath)
+    else:
+        os.makedirs(dirPath)
+        shutil.copy(executable, dirPath)
 
     time.sleep(10)
     os.chdir(dirPath)
