@@ -4,12 +4,8 @@ from multiprocessing import Pool
 import time
 import shutil
 import sys
+import argparse
 
-##smurtlogging
-##find the suite that failed
-##look in the log following the suite name
-##for ever FAIL, pull FAIL line and the line previous to it.
-##repeat for all suites, all iterations
 
 def parseLog(iterationOfLoop):
     breakString = " tests -"
@@ -48,59 +44,41 @@ def parseLog(iterationOfLoop):
     for line in parsedLog:
         completeLog.write(line)
 
+def runTest(server, pictureList, videoList, iterationOfLoop):
+    dirPath = "TestNum%i" % iterationOfLoop
 
-def runWinTest(pictureList,videoList,iterationOfLoop):
-    if os.path.exists("TestNum%i" % iterationOfLoop):
-        shutil.copy2("gpsdk_jakarta_unittest.exe", "TestNum%i" % iterationOfLoop)
+    if(os.name == "posix"):
+        mp4Path = "./TestNum%i/tmp.mp4" % iterationOfLoop
+        jpgPath = "./TestNum%i/tmp.jpg" % iterationOfLoop
+        excutable = "gpsdk_jakarta_unittest"
+    else:
+        mp4Path = "TestNum%i\\tmp.mp4" % iterationOfLoop
+        jpgPath = "TestNum%i\\tmp.jpg" % iterationOfLoop
+        executable = "gpsdk_jakarta_unittest.exe"
+
+    if os.path.exists(dirPath):
+        shutil.copy2(excutable, "TestNum%i" % iterationOfLoop)
     else:
         os.makedirs("TestNum%i" % iterationOfLoop)
-        shutil.copy2("gpsdk_jakarta_unittest.exe", "TestNum%i" % iterationOfLoop)
+        shutil.copy2(executable, "TestNum%i" % iterationOfLoop)
 
     if iterationOfLoop >= len(pictureList):
-        shutil.copy(pictureList[0], "TestNum%i\\tmp.jpg" % iterationOfLoop)
+        shutil.copy(pictureList[0], jpgPath)
         pictID = 0
     else:
-        shutil.copy(pictureList[iterationOfLoop], "TestNum%i\\tmp.jpg" % iterationOfLoop)
+        shutil.copy(pictureList[iterationOfLoop], jpgPath)
         pictID = iterationOfLoop
     if iterationOfLoop >= len(videoList):
-        shutil.copy(videoList[0], "TestNum%i\\tmp.mp4" % iterationOfLoop)
+        shutil.copy(videoList[0], mp4Path)
         videoID = 0
     else:
-        shutil.copy(videoList[iterationOfLoop], "TestNum%i\\tmp.mp4" % iterationOfLoop)
+        shutil.copy(videoList[iterationOfLoop], mp4Path)
         videoID = iterationOfLoop
+
     time.sleep(10)
-    os.chdir("TestNum%i" % iterationOfLoop)
+    os.chdir(dirPath)
     time.sleep((((iterationOfLoop*2)/3)%10)+1)
-    os.system("gpsdk_jakarta_unittest.exe -v -j qa -dcomp 511 -dlevel 555 > runLog%i.log 2>&1" % (iterationOfLoop))
-    os.system("echo 'PID:%s TestNum%i completed using %s AND %s' >> runLog%i.log" % (os.getpid(), iterationOfLoop , videoList[videoID], pictureList[pictID], iterationOfLoop))
-    parseLog(iterationOfLoop)
-    os.chdir("..")
-    return None
-
-
-def runPosixTest(pictureList, videoList, iterationOfLoop):
-    if os.path.exists("./TestNum%i" % iterationOfLoop):
-        shutil.copy2("gpsdk_jakarta_unittest.exe", "TestNum%i" % iterationOfLoop)
-    else:
-        os.makedirs("TestNum%i" % iterationOfLoop)
-        shutil.copy2("gpsdk_jakarta_unittest", "TestNum%i" % iterationOfLoop)
-
-    if iterationOfLoop >= len(pictureList):
-        shutil.copy(pictureList[0], "./TestNum%i/tmp.jpg" % iterationOfLoop)
-        pictID = 0
-    else:
-        shutil.copy(pictureList[iterationOfLoop], "./TestNum%i/tmp.jpg" % iterationOfLoop)
-        pictID = iterationOfLoop
-    if iterationOfLoop >= len(videoList):
-        shutil.copy(videoList[0], "./TestNum%i/tmp.mp4" % iterationOfLoop)
-        videoID = 0
-    else:
-        shutil.copy(videoList[iterationOfLoop], "./TestNum%i/tmp.mp4" % iterationOfLoop)
-        videoID = iterationOfLoop
-    time.sleep(10)
-    os.chdir("TestNum%i/" % iterationOfLoop)
-    time.sleep((((iterationOfLoop*2)/3)%10)+1)
-    os.system("./gpsdk_jakarta_unittest -v -j qa -dcomp 511 -dlevel 555 > runLog%i.log 2>&1" % (iterationOfLoop))
+    os.system("./gpsdk_jakarta_unittest -v -j %s -dcomp 511 -dlevel 555 > runLog%i.log 2>&1" % (server,iterationOfLoop))
     os.system("echo 'PID:%s TestNum%i completed using %s AND %s' >> runLog%i.log" % (os.getpid(), iterationOfLoop , videoList[videoID], pictureList[pictID], iterationOfLoop))
     os.chdir("..")
     return None
@@ -118,10 +96,14 @@ class JDKLibTest():
                     pictureList.append(os.path.join(root, file))
         return pictureList, videoList
 
-    def aggregatePosixLogs(self, listCount):
+    def aggregateLogs(self, listCount):
         self.parsedLog = []
         for i in range(0,listCount):
-            with open("./TestNum%i/ParsedLog%i.log" % (i,i),"r") as file:
+            if (os.name == "posix"):
+                logPath = "./TestNum%i/ParsedLog%i.log" % (i,i)
+            else:
+                logPath = "TestNum%i\\ParsedLog%i.log" % (i,i)
+            with open(logPath,"r") as file:
                 text = file.readlines()
                 for line in range(0,len(text)):
                     self.parsedLog.append(text[line])
@@ -131,52 +113,45 @@ class JDKLibTest():
             completeLog.write(line)
         return completeLog
 
-    def aggregateWinLogs(self, listCount):
-        self.parsedLog = []
-        for i in range(0,listCount):
-            with open("TestNum%i\\ParsedLog%i.log" % (i,i),"r") as file:
-                text = file.readlines()
-                for line in range(0,len(text)):
-                    self.parsedLog.append(text[line])
-            file.close()
-        completeLog = open("AggregatedLog.log","w+")
-        for line in self.parsedLog:
-            completeLog.write(line)
-        return completeLog
-
-
-    def test_runMediaTest(self):
+    def test_runMediaTest(self,server):
 
         if (os.name == "posix"):
             pictureList, videoList = self.appendList("/zoidberg/CI/CAH_Recorded")
+            #local use only
+            #pictureList, videoList = self.appendList("/Users/mgarthwaite/Dropbox")
         else:
             pictureList, videoList = self.appendList("C:\Jenkins\workspace\CAH_Recorded")
-
 
         if len(pictureList) > len(videoList):
              listCount = len(pictureList)
         else:
              listCount = len(videoList)
-        if(os.name == "posix"):
-            func = partial(runPosixTest, pictureList, videoList)
-        else:
-            func = partial(runWinTest, pictureList, videoList)
+
+        func = partial(runTest, server[0], pictureList, videoList)
         pool = Pool(processes=8)
         pool.map(func,range(0,listCount))
         pool.close()
         pool.join()
-        if(os.name == "posix"):
-            logFile = self.aggregatePosixLogs(listCount)
-        else:
-            logFile = self.aggregateWinLogs(listCount)
+
+
+        logFile = self.aggregateLogs(listCount)
+
+        print "wut"
         logFile.seek(0)
         print logFile.read()
         logFile.seek(0)
+
         if "FAIL" in logFile.read():
             sys.exit(1)
         else:
             sys.exit(0)
 
+def parseArgs():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-s ","--server", required=True)
+    args = parser.parse_args()
+    return args.server
+
 if (__name__ == "__main__"):
     testWrapper = JDKLibTest()
-    testWrapper.test_runMediaTest()
+    testWrapper.test_runMediaTest(parseArgs())
