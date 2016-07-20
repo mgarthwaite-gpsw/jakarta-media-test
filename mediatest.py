@@ -47,9 +47,6 @@ def parseLog(iterationOfLoop):
 def runTest(server, pictureList, videoList, iterationOfLoop):
 
 
-    if os.path.exists(dirPath):
-        shutil.rmtree(dirPath)
-
     if (os.name == "posix"):
         executable = "./gpsdk_jakarta_unittest"
         dirPath = "%s/TestNum%i" % (os.getcwd(), iterationOfLoop)
@@ -57,6 +54,8 @@ def runTest(server, pictureList, videoList, iterationOfLoop):
         executable = "gpsdk_jakarta_unittest.exe"
         dirPath = "%s\TestNum%i" % (os.getcwd(), iterationOfLoop)
 
+    if os.path.exists(dirPath):
+        shutil.rmtree(dirPath)
     mp4Path = dirPath + "/tmp.mp4"
     jpgPath = dirPath + "/tmp.jpg"
     os.makedirs(dirPath)
