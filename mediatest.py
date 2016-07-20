@@ -121,8 +121,6 @@ class JDKLibTest():
 
         if (os.name == "posix"):
             pictureList, videoList = self.appendList("/zoidberg/CI/CAH_Recorded")
-            #local use only
-            #pictureList, videoList = self.appendList("/Users/mgarthwaite/Dropbox")
         else:
             pictureList, videoList = self.appendList("C:\Jenkins\workspace\CAH_Recorded")
 
