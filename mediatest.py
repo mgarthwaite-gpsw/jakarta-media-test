@@ -56,7 +56,7 @@ def runTest(server, pictureList, videoList, iterationOfLoop):
         executable = "./gpsdk_jakarta_unittest"
         dirPath = "%s/TestNum%i" % (os.getcwd(), iterationOfLoop)
     else:
-        executable = "gpsdk_jakarta_unittest"
+        executable = "gpsdk_jakarta_unittest.exe"
         dirPath = "%s\TestNum%i\\" % (os.getcwd(), iterationOfLoop)
 
     if os.path.exists(dirPath):
