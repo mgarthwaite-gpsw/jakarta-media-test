@@ -22,7 +22,6 @@ def parseLog(iterationOfLoop):
         if "FAIL SUITE: suite_" in parsedLog[line]:
             stringList = parsedLog[line].split()
             suiteName = stringList[len(stringList)-1]
-            print suiteName
             runLogLine = 0
             for i in range(runLogLine,len(text)):
                 runLogLine += 1
@@ -59,7 +58,7 @@ def runTest(server, pictureList, videoList, iterationOfLoop):
         mp4Path = "TestNum%i\\tmp.mp4" % iterationOfLoop
         jpgPath = "TestNum%i\\tmp.jpg" % iterationOfLoop
         executableSrc = "gpsdk_jakarta_unittest.exe"
-        executableDst = ".\\TestNum%i\\gpsdk_jakarta_unittest.exe" % iterationOfLoop
+        executableDst = ".\TestNum%i\gpsdk_jakarta_unittest.exe" % iterationOfLoop
 
     if iterationOfLoop >= len(pictureList):
         shutil.copy2(pictureList[0], jpgPath)
@@ -123,9 +122,9 @@ class JDKLibTest():
     def test_runMediaTest(self,server):
 
         if (os.name == "posix"):
-            #pictureList, videoList = self.appendList("/zoidberg/CI/CAH_Recorded")
+            pictureList, videoList = self.appendList("/zoidberg/CI/CAH_Recorded")
             #local use only
-            pictureList, videoList = self.appendList("/Users/mgarthwaite/Dropbox")
+            #pictureList, videoList = self.appendList("/Users/mgarthwaite/Dropbox")
         else:
             pictureList, videoList = self.appendList("C:\Jenkins\workspace\CAH_Recorded")
 
