@@ -77,7 +77,10 @@ def runTest(server, pictureList, videoList, iterationOfLoop):
     time.sleep(10)
     os.chdir(dirPath)
     time.sleep((((iterationOfLoop*2)/3)%10)+1)
-    os.system(executable + " -v -j %s -dcomp 511 -dlevel 555 > runLog%i.log 2>&1" % (server,iterationOfLoop))
+    if (os.name == "posix"):
+        os.system(executable + " -v -j %s -dcomp 511 -dlevel 555 > runLog%i.log 2>&1" % (server,iterationOfLoop))
+    else:
+        os.system(executable[:-4] + " -v -j %s -dcomp 511 -dlevel 555 > runLog%i.log 2>&1" % (server, iterationOfLoop))
     os.system("echo 'PID:%s TestNum%i completed using %s AND %s' >> runLog%i.log" % (os.getpid(), iterationOfLoop , videoList[videoID], pictureList[pictID], iterationOfLoop))
     parseLog(iterationOfLoop)
     os.chdir("..")
