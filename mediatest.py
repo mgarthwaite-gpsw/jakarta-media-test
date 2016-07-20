@@ -86,6 +86,7 @@ def runTest(server, pictureList, videoList, iterationOfLoop):
     if (os.name == "posix"):
         os.system(executable + " -v -j %s -dcomp 511 -dlevel 555 > runLog%i.log 2>&1" % (server,iterationOfLoop))
     else:
+        os.chmod(executable, 777)
         os.system(executable + " -v -j %s -dcomp 511 -dlevel 555 > runLog%i.log 2>&1" % (server, iterationOfLoop))
     os.system("echo 'PID:%s TestNum%i completed using %s AND %s' >> runLog%i.log" % (os.getpid(), iterationOfLoop , videoList[videoID], pictureList[pictID], iterationOfLoop))
     parseLog(iterationOfLoop)
