@@ -45,20 +45,22 @@ def parseLog(iterationOfLoop):
     shortLog.close()
 
 def runTest(server, pictureList, videoList, iterationOfLoop):
-    dirPath = "%s/TestNum%i" % (os.getcwd(), iterationOfLoop)
+
+
     if os.path.exists(dirPath):
         shutil.rmtree(dirPath)
-    mp4Path = dirPath + "/tmp.mp4"
-    jpgPath = dirPath + "/tmp.jpg"
+
     if (os.name == "posix"):
         executable = "./gpsdk_jakarta_unittest"
+        dirPath = "%s/TestNum%i" % (os.getcwd(), iterationOfLoop)
     else:
         executable = "gpsdk_jakarta_unittest.exe"
+        dirPath = "%s\TestNum%i" % (os.getcwd(), iterationOfLoop)
 
+    mp4Path = dirPath + "/tmp.mp4"
+    jpgPath = dirPath + "/tmp.jpg"
     os.makedirs(dirPath)
-    print "copying..."
     shutil.copy2(executable, dirPath)
-    print "copied"
 
     if iterationOfLoop >= len(pictureList):
         shutil.copy2(pictureList[0], jpgPath)
@@ -76,7 +78,6 @@ def runTest(server, pictureList, videoList, iterationOfLoop):
     time.sleep(10)
     os.chdir(dirPath)
     time.sleep((((iterationOfLoop*2)/3)%10)+1)
-    print "executing"
     os.system(executable + " -v -j %s -dcomp 511 -dlevel 555 > runLog%i.log 2>&1" % (server,iterationOfLoop))
     os.system("echo 'PID:%s TestNum%i completed using %s AND %s' >> runLog%i.log" % (os.getpid(), iterationOfLoop , videoList[videoID], pictureList[pictID], iterationOfLoop))
     parseLog(iterationOfLoop)
