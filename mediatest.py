@@ -51,14 +51,24 @@ def runTest(server, pictureList, videoList, iterationOfLoop):
         dirPath = "TestNum%i" % iterationOfLoop
         mp4Path = "./TestNum%i/tmp.mp4" % iterationOfLoop
         jpgPath = "./TestNum%i/tmp.jpg" % iterationOfLoop
-        executableSrc = "gpsdk_jakarta_unittest"
+        executable = "gpsdk_jakarta_unittest"
         executableDst = "TestNum%i/gpsdk_jakarta_unittest.exe"
+        if os.path.exists(dirPath):
+            shutil.copy2(executable, executableDst)
+        else:
+            os.makedirs(dirPath)
+            shutil.copy2(executable, executableDst)
     else:
         dirPath = "TestNum%i" % iterationOfLoop
         mp4Path = "TestNum%i\\tmp.mp4" % iterationOfLoop
         jpgPath = "TestNum%i\\tmp.jpg" % iterationOfLoop
-        executableSrc = "gpsdk_jakarta_unittest.exe"
-        executableDst = r".\TestNum%i\gpsdk_jakarta_unittest.exe" % iterationOfLoop
+        executable = "gpsdk_jakarta_unittest.exe"
+
+        if os.path.exists(dirPath):
+            shutil.copy2("gpsdk_jakarta_unittest.exe", "TestNum%i" % iterationOfLoop)
+        else:
+            os.makedirs(dirPath)
+            shutil.copy2("gpsdk_jakarta_unittest.exe", "TestNum%i" % iterationOfLoop)
 
     if iterationOfLoop >= len(pictureList):
         shutil.copy2(pictureList[0], jpgPath)
@@ -73,18 +83,11 @@ def runTest(server, pictureList, videoList, iterationOfLoop):
         shutil.copy(videoList[iterationOfLoop], mp4Path)
         videoID = iterationOfLoop
 
-    if os.path.exists(dirPath):
-        shutil.copy2(executableSrc, executableDst)
-    else:
-        os.makedirs(dirPath)
-        shutil.copy2(executableSrc, executableDst)
-
     time.sleep(10)
-
-    time.sleep((((iterationOfLoop*2)/3)%10)+1)
-    os.system(executableDst + " -v -j %s -dcomp 511 -dlevel 555 > runLog%i.log 2>&1" % (server,iterationOfLoop))
-    os.system("echo 'PID:%s TestNum%i completed using %s AND %s' >> runLog%i.log" % (os.getpid(), iterationOfLoop , videoList[videoID], pictureList[pictID], iterationOfLoop))
     os.chdir(dirPath)
+    time.sleep((((iterationOfLoop*2)/3)%10)+1)
+    os.system(executable + " -v -j %s -dcomp 511 -dlevel 555 > runLog%i.log 2>&1" % (server,iterationOfLoop))
+    os.system("echo 'PID:%s TestNum%i completed using %s AND %s' >> runLog%i.log" % (os.getpid(), iterationOfLoop , videoList[videoID], pictureList[pictID], iterationOfLoop))
     parseLog(iterationOfLoop)
     os.chdir("..")
     return None
