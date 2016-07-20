@@ -50,14 +50,14 @@ def runTest(server, pictureList, videoList, iterationOfLoop):
     if(os.name == "posix"):
         mp4Path = "./TestNum%i/tmp.mp4" % iterationOfLoop
         jpgPath = "./TestNum%i/tmp.jpg" % iterationOfLoop
-        excutable = "gpsdk_jakarta_unittest"
+        executable = "./gpsdk_jakarta_unittest"
     else:
         mp4Path = "TestNum%i\\tmp.mp4" % iterationOfLoop
         jpgPath = "TestNum%i\\tmp.jpg" % iterationOfLoop
         executable = "gpsdk_jakarta_unittest.exe"
 
     if os.path.exists(dirPath):
-        shutil.copy2(excutable, "TestNum%i" % iterationOfLoop)
+        shutil.copy2(executable, "TestNum%i" % iterationOfLoop)
     else:
         os.makedirs("TestNum%i" % iterationOfLoop)
         shutil.copy2(executable, "TestNum%i" % iterationOfLoop)
@@ -78,7 +78,7 @@ def runTest(server, pictureList, videoList, iterationOfLoop):
     time.sleep(10)
     os.chdir(dirPath)
     time.sleep((((iterationOfLoop*2)/3)%10)+1)
-    os.system("./gpsdk_jakarta_unittest -v -j %s -dcomp 511 -dlevel 555 > runLog%i.log 2>&1" % (server,iterationOfLoop))
+    os.system(executable + " -v -j %s -dcomp 511 -dlevel 555 > runLog%i.log 2>&1" % (server,iterationOfLoop))
     os.system("echo 'PID:%s TestNum%i completed using %s AND %s' >> runLog%i.log" % (os.getpid(), iterationOfLoop , videoList[videoID], pictureList[pictID], iterationOfLoop))
     os.chdir("..")
     return None
@@ -127,7 +127,7 @@ class JDKLibTest():
         else:
              listCount = len(videoList)
 
-        func = partial(runTest, server[0], pictureList, videoList)
+        func = partial(runTest, server, pictureList, videoList)
         pool = Pool(processes=8)
         pool.map(func,range(0,listCount))
         pool.close()
@@ -135,8 +135,6 @@ class JDKLibTest():
 
 
         logFile = self.aggregateLogs(listCount)
-
-        print "wut"
         logFile.seek(0)
         print logFile.read()
         logFile.seek(0)
