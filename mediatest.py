@@ -31,7 +31,7 @@ def parseLog(iterationOfLoop):
                 if breakString in text[runLogLine]:
                     runLogLine += 1
                     break
-                elif "FAIL test_" in text[runLogLine]:
+                elif "FAIL " in text[runLogLine]:
                     parsedLog.insert(line+1,"\t \t%s" % text[runLogLine])
                     parsedLog.insert(line+1,"\t \t%s" % text[runLogLine-1])
                     runLogLine += 1
@@ -52,12 +52,11 @@ def runTest(server, pictureList, videoList, iterationOfLoop):
         mp4Path = "./TestNum%i/tmp.mp4" % iterationOfLoop
         jpgPath = "./TestNum%i/tmp.jpg" % iterationOfLoop
         executable = "gpsdk_jakarta_unittest"
-        executableDst = "TestNum%i/gpsdk_jakarta_unittest.exe"
         if os.path.exists(dirPath):
-            shutil.copy2(executable, executableDst)
+            shutil.copy2(executable, dirPath)
         else:
             os.makedirs(dirPath)
-            shutil.copy2(executable, executableDst)
+            shutil.copy2(executable, dirPath)
     else:
         dirPath = "TestNum%i" % iterationOfLoop
         mp4Path = "TestNum%i\\tmp.mp4" % iterationOfLoop
