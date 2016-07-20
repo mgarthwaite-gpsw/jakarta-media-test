@@ -46,28 +46,19 @@ def parseLog(iterationOfLoop):
 
 def runTest(server, pictureList, videoList, iterationOfLoop):
 
-
-    if(os.name == "posix"):
-        dirPath = "TestNum%i" % iterationOfLoop
-        mp4Path = "./TestNum%i/tmp.mp4" % iterationOfLoop
-        jpgPath = "./TestNum%i/tmp.jpg" % iterationOfLoop
+    dirPath = "%s/TestNum%i" % (os.getcwd(), iterationOfLoop)
+    mp4Path = dirPath + "/tmp.mp4"
+    jpgPath = dirPath + "/tmp.jpg"
+    if (os.name == "posix"):
         executable = "gpsdk_jakarta_unittest"
-        if os.path.exists(dirPath):
-            shutil.copy2(executable, dirPath)
-        else:
-            os.makedirs(dirPath)
-            shutil.copy2(executable, dirPath)
     else:
-        dirPath = "TestNum%i" % iterationOfLoop
-        mp4Path = "TestNum%i\\tmp.mp4" % iterationOfLoop
-        jpgPath = "TestNum%i\\tmp.jpg" % iterationOfLoop
         executable = "gpsdk_jakarta_unittest.exe"
 
-        if os.path.exists(dirPath):
-            shutil.copy2("gpsdk_jakarta_unittest.exe", "%s\TestNum%i" % (os.getcwd(), iterationOfLoop))
-        else:
-            os.makedirs(dirPath)
-            shutil.copy2("gpsdk_jakarta_unittest.exe", "%s\TestNum%i" % (os.getcwd(), iterationOfLoop))
+    if os.path.exists(dirPath):
+        shutil.copy2(executable,dirPath)
+    else:
+        os.makedirs(dirPath)
+        shutil.copy2(executable, dirPath)
 
     if iterationOfLoop >= len(pictureList):
         shutil.copy2(pictureList[0], jpgPath)
@@ -107,10 +98,7 @@ class JDKLibTest():
     def aggregateLogs(self, listCount):
         self.parsedLog = []
         for i in range(0,listCount):
-            if (os.name == "posix"):
-                logPath = "./TestNum%i/ParsedLog%i.log" % (i,i)
-            else:
-                logPath = "TestNum%i\\ParsedLog%i.log" % (i,i)
+            logPath = "TestNum%i/ParsedLog%i.log" % (i,i)
             with open(logPath,"r") as file:
                 text = file.readlines()
                 for line in range(0,len(text)):
