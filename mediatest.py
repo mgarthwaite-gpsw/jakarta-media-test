@@ -42,7 +42,11 @@ def parseLog(iterationOfLoop):
     shortLog = open("ParsedLog%i.log" % iterationOfLoop, "w+")
     for line in parsedLog:
         shortLog.write(line)
+    shortLog.write("=====================================-----END OF TEST RUN----=================================================\n\n")
+    print shortLog.read()
+    shortLog.seek(0)
     shortLog.close()
+
 
 def runTest(server, pictureList, videoList, iterationOfLoop):
 
@@ -135,8 +139,6 @@ class JDKLibTest():
 
 
         logFile = self.aggregateLogs(listCount)
-        logFile.seek(0)
-        print logFile.read()
         logFile.seek(0)
 
         if "FAIL" in logFile.read():
