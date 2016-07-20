@@ -52,39 +52,40 @@ def runTest(server, pictureList, videoList, iterationOfLoop):
         dirPath = "TestNum%i" % iterationOfLoop
         mp4Path = "./TestNum%i/tmp.mp4" % iterationOfLoop
         jpgPath = "./TestNum%i/tmp.jpg" % iterationOfLoop
-        executable = "./gpsdk_jakarta_unittest"
+        executableSrc = "gpsdk_jakarta_unittest"
+        executableDst = "TestNum%i/gpsdk_jakarta_unittest.exe"
     else:
-        dirPath = ".\\TestNum%i" % iterationOfLoop
+        dirPath = "TestNum%i" % iterationOfLoop
         mp4Path = "TestNum%i\\tmp.mp4" % iterationOfLoop
         jpgPath = "TestNum%i\\tmp.jpg" % iterationOfLoop
-        executable = "gpsdk_jakarta_unittest.exe"
-
-
+        executableSrc = "gpsdk_jakarta_unittest.exe"
+        executableDst = ".\\TestNum%i\\gpsdk_jakarta_unittest.exe"
 
     if iterationOfLoop >= len(pictureList):
-        shutil.copy(pictureList[0], jpgPath)
+        shutil.copy2(pictureList[0], jpgPath)
         pictID = 0
     else:
         shutil.copy(pictureList[iterationOfLoop], jpgPath)
         pictID = iterationOfLoop
     if iterationOfLoop >= len(videoList):
-        shutil.copy(videoList[0], mp4Path)
+        shutil.copy2(videoList[0], mp4Path)
         videoID = 0
     else:
         shutil.copy(videoList[iterationOfLoop], mp4Path)
         videoID = iterationOfLoop
 
     if os.path.exists(dirPath):
-        shutil.copy(executable, dirPath)
+        shutil.copy2(executableSrc, executableDst)
     else:
         os.makedirs(dirPath)
-        shutil.copy(executable, dirPath)
+        shutil.copy2(executableSrc, executableDst)
 
     time.sleep(10)
-    os.chdir(dirPath)
+
     time.sleep((((iterationOfLoop*2)/3)%10)+1)
-    os.system(executable + " -v -j %s -dcomp 511 -dlevel 555 > runLog%i.log 2>&1" % (server,iterationOfLoop))
+    os.system(executableDst + " -v -j %s -dcomp 511 -dlevel 555 > runLog%i.log 2>&1" % (server,iterationOfLoop))
     os.system("echo 'PID:%s TestNum%i completed using %s AND %s' >> runLog%i.log" % (os.getpid(), iterationOfLoop , videoList[videoID], pictureList[pictID], iterationOfLoop))
+    os.chdir(dirPath)
     parseLog(iterationOfLoop)
     os.chdir("..")
     return None
