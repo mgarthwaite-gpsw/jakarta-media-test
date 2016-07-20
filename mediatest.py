@@ -57,10 +57,10 @@ def runTest(server, pictureList, videoList, iterationOfLoop):
         executable = "gpsdk_jakarta_unittest.exe"
 
     if os.path.exists(dirPath):
-        shutil.copy2(executable, "TestNum%i" % iterationOfLoop)
+        shutil.copy(executable, "TestNum%i" % iterationOfLoop)
     else:
         os.makedirs("TestNum%i" % iterationOfLoop)
-        shutil.copy2(executable, "TestNum%i" % iterationOfLoop)
+        shutil.copy(executable, "TestNum%i" % iterationOfLoop)
 
     if iterationOfLoop >= len(pictureList):
         shutil.copy(pictureList[0], jpgPath)
