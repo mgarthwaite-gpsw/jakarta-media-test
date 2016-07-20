@@ -43,6 +43,7 @@ def parseLog(iterationOfLoop):
     for line in parsedLog:
         shortLog.write(line)
     shortLog.write("=====================================-----END OF TEST RUN----=================================================\n\n")
+    shortLog.seek(0)
     print shortLog.read()
     shortLog.seek(0)
     shortLog.close()
