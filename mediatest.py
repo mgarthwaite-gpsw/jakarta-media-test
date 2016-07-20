@@ -40,9 +40,10 @@ def parseLog(iterationOfLoop):
                 else:
                     runLogLine +=1
         line += 1
-    completeLog = open("ParsedLog%i.log" % iterationOfLoop, "w+")
+    shortLog = open("ParsedLog%i.log" % iterationOfLoop, "w+")
     for line in parsedLog:
-        completeLog.write(line)
+        shortLog.write(line)
+    shortLog.close()
 
 def runTest(server, pictureList, videoList, iterationOfLoop):
     dirPath = "TestNum%i" % iterationOfLoop
@@ -57,10 +58,10 @@ def runTest(server, pictureList, videoList, iterationOfLoop):
         executable = "gpsdk_jakarta_unittest.exe"
 
     if os.path.exists(dirPath):
-        shutil.copy(executable, "TestNum%i" % iterationOfLoop)
+        shutil.copy(executable, dirPath)
     else:
-        os.makedirs("TestNum%i" % iterationOfLoop)
-        shutil.copy(executable, "TestNum%i" % iterationOfLoop)
+        os.makedirs(dirPath)
+        shutil.copy(executable, dirPath)
 
     if iterationOfLoop >= len(pictureList):
         shutil.copy(pictureList[0], jpgPath)
@@ -80,6 +81,7 @@ def runTest(server, pictureList, videoList, iterationOfLoop):
     time.sleep((((iterationOfLoop*2)/3)%10)+1)
     os.system(executable + " -v -j %s -dcomp 511 -dlevel 555 > runLog%i.log 2>&1" % (server,iterationOfLoop))
     os.system("echo 'PID:%s TestNum%i completed using %s AND %s' >> runLog%i.log" % (os.getpid(), iterationOfLoop , videoList[videoID], pictureList[pictID], iterationOfLoop))
+    parseLog(iterationOfLoop)
     os.chdir("..")
     return None
 
@@ -116,9 +118,9 @@ class JDKLibTest():
     def test_runMediaTest(self,server):
 
         if (os.name == "posix"):
-            pictureList, videoList = self.appendList("/zoidberg/CI/CAH_Recorded")
+            #pictureList, videoList = self.appendList("/zoidberg/CI/CAH_Recorded")
             #local use only
-            #pictureList, videoList = self.appendList("/Users/mgarthwaite/Dropbox")
+            pictureList, videoList = self.appendList("/Users/mgarthwaite/Dropbox")
         else:
             pictureList, videoList = self.appendList("C:\Jenkins\workspace\CAH_Recorded")
 
