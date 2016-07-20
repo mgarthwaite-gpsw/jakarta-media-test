@@ -59,7 +59,7 @@ def runTest(server, pictureList, videoList, iterationOfLoop):
     mp4Path = dirPath + "/tmp.mp4"
     jpgPath = dirPath + "/tmp.jpg"
     os.makedirs(dirPath)
-    shutil.copy2(executable, dirPath)
+
 
     if iterationOfLoop >= len(pictureList):
         shutil.copy2(pictureList[0], jpgPath)
@@ -73,7 +73,7 @@ def runTest(server, pictureList, videoList, iterationOfLoop):
     else:
         shutil.copy2(videoList[iterationOfLoop], mp4Path)
         videoID = iterationOfLoop
-
+    shutil.copy2(executable, dirPath)
     time.sleep(10)
     os.chdir(dirPath)
     time.sleep((((iterationOfLoop*2)/3)%10)+1)
