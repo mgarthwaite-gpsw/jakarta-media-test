@@ -58,7 +58,7 @@ def runTest(server, pictureList, videoList, iterationOfLoop):
         mp4Path = "TestNum%i\\tmp.mp4" % iterationOfLoop
         jpgPath = "TestNum%i\\tmp.jpg" % iterationOfLoop
         executableSrc = "gpsdk_jakarta_unittest.exe"
-        executableDst = ".\TestNum%i\gpsdk_jakarta_unittest.exe" % iterationOfLoop
+        executableDst = r".\TestNum%i\gpsdk_jakarta_unittest.exe" % iterationOfLoop
 
     if iterationOfLoop >= len(pictureList):
         shutil.copy2(pictureList[0], jpgPath)
