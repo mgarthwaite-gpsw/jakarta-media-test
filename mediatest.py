@@ -50,8 +50,6 @@ def parseLog(iterationOfLoop):
 
 
 def runTest(server, pictureList, videoList, iterationOfLoop):
-
-
     if (os.name == "posix"):
         executable = "./gpsdk_jakarta_unittest"
         dirPath = "%s/TestNum%i" % (os.getcwd(), iterationOfLoop)
@@ -82,12 +80,10 @@ def runTest(server, pictureList, videoList, iterationOfLoop):
     time.sleep(10)
     os.chdir(dirPath)
     time.sleep((((iterationOfLoop*2)/3)%10)+1)
-    if (os.name == "posix"):
-        os.system(executable + " -v -j %s -dcomp 511 -dlevel 555 > runLog%i.log 2>&1" % (server,iterationOfLoop))
-    else:
-        os.chmod(executable, 777)
-        os.system(executable + " -v -j %s -dcomp 511 -dlevel 555 > runLog%i.log 2>&1" % (server, iterationOfLoop))
+    os.system(executable + " -v -j %s -s Suite suite_media2_complete_direct_s3_upload -dcomp 511 -dlevel 555 > runLog%i.log 2>&1" % (server,iterationOfLoop))
     os.system("echo 'PID:%s TestNum%i completed using %s AND %s' >> runLog%i.log" % (os.getpid(), iterationOfLoop , videoList[videoID], pictureList[pictID], iterationOfLoop))
+    os.remove("tmp.mp4")
+    os.remove("tmp.jpg")
     parseLog(iterationOfLoop)
     os.chdir("..")
     return None
@@ -120,7 +116,8 @@ class JDKLibTest():
         return completeLog
 
     def test_runMediaTest(self,server):
-
+        #/Users/mgarthwaite/Dropbox/CAH_Recorded
+        #/zoidberg/CI/CAH_Recorded
         if (os.name == "posix"):
             pictureList, videoList = self.appendList("/zoidberg/CI/CAH_Recorded")
         else:
