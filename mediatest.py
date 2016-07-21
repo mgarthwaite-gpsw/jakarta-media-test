@@ -58,7 +58,6 @@ def runTest(server, pictureList, videoList, iterationOfLoop):
     else:
         executable = "gpsdk_jakarta_unittest.exe"
         dirPath = "%s\TestNum%i" % (os.getcwd(), iterationOfLoop)
-        os.chmod(executable,777)
 
     if os.path.exists(dirPath):
         shutil.rmtree(dirPath)
