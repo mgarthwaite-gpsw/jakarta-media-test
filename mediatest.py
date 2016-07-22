@@ -50,12 +50,9 @@ def parseLog(iterationOfLoop):
 
 
 def runTest(server, pictureList, videoList, iterationOfLoop):
-    if (os.name == "posix"):
-        executable = "./gpsdk_jakarta_unittest"
-        dirPath = "%s/TestNum%i" % (os.getcwd(), iterationOfLoop)
-    else:
-        executable = "gpsdk_jakarta_unittest"
-        dirPath = "%s\TestNum%i" % (os.getcwd(), iterationOfLoop)
+
+    executable = "./gpsdk_jakarta_unittest"
+    dirPath = "%s/TestNum%i" % (os.getcwd(), iterationOfLoop)
 
     if os.path.exists(dirPath):
         shutil.rmtree(dirPath)
@@ -120,8 +117,6 @@ class JDKLibTest():
         #/zoidberg/CI/CAH_Recorded
         if (os.name == "posix"):
             pictureList, videoList = self.appendList("/zoidberg/CI/CAH_Recorded")
-        else:
-            pictureList, videoList = self.appendList("C:\Jenkins\workspace\CAH_Recorded")
 
         if len(pictureList) > len(videoList):
              listCount = len(pictureList)
