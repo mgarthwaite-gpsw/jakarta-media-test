@@ -113,10 +113,11 @@ class JDKLibTest():
         return completeLog
 
     def test_runMediaTest(self,server):
+        #local use
         #/Users/mgarthwaite/Dropbox/CAH_Recorded
         #/zoidberg/CI/CAH_Recorded
-        if (os.name == "posix"):
-            pictureList, videoList = self.appendList("/zoidberg/CI/CAH_Recorded")
+
+        pictureList, videoList = self.appendList("/zoidberg/CI/CAH_Recorded")
 
         if len(pictureList) > len(videoList):
              listCount = len(pictureList)
