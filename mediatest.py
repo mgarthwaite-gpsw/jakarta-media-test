@@ -110,7 +110,25 @@ class JDKLibTest():
         completeLog = open("AggregatedLog.log","w+")
         for line in self.parsedLog:
             completeLog.write(line)
-        return completeLog
+
+
+        count = 0
+        failID = 0
+        for line in completeLog:
+            count += line.count("FAIL SUITE: ")
+
+
+        if count == 0:
+            completeLog.write("NO FAILED TESTS. GREEN")
+            failID = 0
+        elif count > 0 and count < listCount:
+            completeLog.write("SOME FAILED TESTS. YELLOW")
+            failID = 1
+        else:
+            completeLog.write("ALL TESTS FAILED. RED.")
+            failID = 2
+
+        return completeLog, failID
 
     def test_runMediaTest(self,server):
         #local use
@@ -131,11 +149,13 @@ class JDKLibTest():
         pool.join()
 
 
-        logFile = self.aggregateLogs(listCount)
-        logFile.seek(0)
+        logFile,failID = self.aggregateLogs(listCount)
 
-        if "FAIL" in logFile.read():
-            sys.exit(1)
+
+        if failID == 2:
+            sys.exit(0)
+        elif failID == 1:
+            sys.exit(0)
         else:
             sys.exit(0)
 
