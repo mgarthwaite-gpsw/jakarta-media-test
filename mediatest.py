@@ -119,12 +119,15 @@ class JDKLibTest():
 
 
         if count == 0:
+            print "NO FAILED TESTS. GREEN"
             completeLog.write("NO FAILED TESTS. GREEN")
             failID = 0
         elif count > 0 and count < listCount:
+            print "SOME FAILED TESTS. YELLOW"
             completeLog.write("SOME FAILED TESTS. YELLOW")
             failID = 1
         else:
+            print "ALL TESTS FAILED. RED."
             completeLog.write("ALL TESTS FAILED. RED.")
             failID = 2
 
