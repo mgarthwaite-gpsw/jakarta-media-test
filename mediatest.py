@@ -12,7 +12,7 @@ def parseLog(iterationOfLoop):
     parsedLog = []
     with open("runLog%i.log" % (iterationOfLoop), "r") as file:
         text = file.readlines()
-        for line in range(len(text) - 1, -1, -1):
+        for line in text:
             parsedLog.append(line)
             # if (text[line][0:6] == "Total:"):
             #     for appLine in range(line, len(text)):
