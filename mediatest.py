@@ -13,32 +13,33 @@ def parseLog(iterationOfLoop):
     with open("runLog%i.log" % (iterationOfLoop), "r") as file:
         text = file.readlines()
         for line in range(len(text) - 1, -1, -1):
-            if (text[line][0:6] == "Total:"):
-                for appLine in range(line, len(text)):
-                    parsedLog.append(text[appLine])
-    lenParsedLog = len(parsedLog)
-    line = 0
-    while line < lenParsedLog:
-        if "FAIL SUITE: suite_" in parsedLog[line]:
-            stringList = parsedLog[line].split()
-            suiteName = stringList[len(stringList)-1]
-            runLogLine = 0
-            for i in range(runLogLine,len(text)):
-                runLogLine += 1
-                if suiteName in text[i]:
-                    break
-            while runLogLine < len(text):
-                if breakString in text[runLogLine]:
-                    runLogLine += 1
-                    break
-                elif "FAIL " in text[runLogLine]:
-                    parsedLog.insert(line+1,"\t \t%s" % text[runLogLine])
-                    parsedLog.insert(line+1,"\t \t%s" % text[runLogLine-1])
-                    runLogLine += 1
-                    lenParsedLog = len(parsedLog)
-                else:
-                    runLogLine +=1
-        line += 1
+            parsedLog.append(line)
+            # if (text[line][0:6] == "Total:"):
+            #     for appLine in range(line, len(text)):
+            #         parsedLog.append(text[appLine])
+    # lenParsedLog = len(parsedLog)
+    # line = 0
+    # while line < lenParsedLog:
+    #     if "FAIL SUITE: suite_" in parsedLog[line]:
+    #         stringList = parsedLog[line].split()
+    #         suiteName = stringList[len(stringList)-1]
+    #         runLogLine = 0
+    #         for i in range(runLogLine,len(text)):
+    #             runLogLine += 1
+    #             if suiteName in text[i]:
+    #                 break
+    #         while runLogLine < len(text):
+    #             if breakString in text[runLogLine]:
+    #                 runLogLine += 1
+    #                 break
+    #             elif "FAIL " in text[runLogLine]:
+    #                 parsedLog.insert(line+1,"\t \t%s" % text[runLogLine])
+    #                 parsedLog.insert(line+1,"\t \t%s" % text[runLogLine-1])
+    #                 runLogLine += 1
+    #                 lenParsedLog = len(parsedLog)
+    #             else:
+    #                 runLogLine +=1
+    #     line += 1
     shortLog = open("ParsedLog%i.log" % iterationOfLoop, "w+")
     for line in parsedLog:
         shortLog.write(line)
@@ -77,7 +78,7 @@ def runTest(server, pictureList, videoList, iterationOfLoop):
     time.sleep(10)
     os.chdir(dirPath)
     time.sleep((((iterationOfLoop*2)/3)%10)+1)
-    os.system(executable + " -v -s suite_media2_complete_direct_s3_upload -j %s -dcomp 511 -dlevel 555 > runLog%i.log 2>&1" % (server,iterationOfLoop))
+    os.system(executable + " -v -s suite_media2_complete_direct_s3_upload -j %s -dcomp 511 -dlevel 255 > runLog%i.log 2>&1" % (server,iterationOfLoop))
     os.system("echo 'PID:%s TestNum%i completed using %s AND %s' >> runLog%i.log" % (os.getpid(), iterationOfLoop , videoList[videoID], pictureList[pictID], iterationOfLoop))
     os.remove("tmp.mp4")
     os.remove("tmp.jpg")
