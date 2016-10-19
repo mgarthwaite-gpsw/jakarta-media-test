@@ -50,7 +50,7 @@ def parseLog(iterationOfLoop):
     shortLog.close()
 
 
-def runTest(server, pictureList, videoList, iterationOfLoop):
+def runTest(server, user, password, pictureList, videoList, iterationOfLoop):
 
     executable = "./gpsdk_jakarta_unittest"
     dirPath = "%s/TestNum%i" % (os.getcwd(), iterationOfLoop)
@@ -78,7 +78,7 @@ def runTest(server, pictureList, videoList, iterationOfLoop):
     time.sleep(10)
     os.chdir(dirPath)
     time.sleep((((iterationOfLoop*2)/3)%10)+1)
-    os.system(executable + " -v -s suite_media2_complete_direct_s3_upload -j %s -dcomp 511 -dlevel 255 > runLog%i.log 2>&1" % (server,iterationOfLoop))
+    os.system(executable + " -v -s suite_media2_complete_direct_s3_upload -j %s -u %s -p %s -dcomp 511 -dlevel 255 > runLog%i.log 2>&1" % (server,user,password, iterationOfLoop))
     os.system("echo 'PID:%s TestNum%i completed using %s AND %s' >> runLog%i.log" % (os.getpid(), iterationOfLoop , videoList[videoID], pictureList[pictID], iterationOfLoop))
     os.remove("tmp.mp4")
     os.remove("tmp.jpg")
@@ -114,7 +114,7 @@ class JDKLibTest():
 
         return completeLog
 
-    def test_runMediaTest(self,server):
+    def test_runMediaTest(self,server,user,password):
         #local use
         #/Users/mgarthwaite/Dropbox/CAH_Recorded
         #/zoidberg/CI/CAH_Recorded
@@ -126,7 +126,7 @@ class JDKLibTest():
         else:
              listCount = len(videoList)
 
-        func = partial(runTest, server, pictureList, videoList)
+        func = partial(runTest, server, user, password, pictureList, videoList)
         pool = Pool(processes=8)
         pool.map(func,range(0,listCount))
         pool.close()
@@ -151,9 +151,14 @@ class JDKLibTest():
 def parseArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument("-s ","--server", required=True)
+
+    parser.add_argument("-u", "--user", required=True)
+
+    parser.add_argument("-p", "--password",required=True)
     args = parser.parse_args()
-    return args.server
+    return args.server, args.user, args.password
 
 if (__name__ == "__main__"):
     testWrapper = JDKLibTest()
-    testWrapper.test_runMediaTest(parseArgs())
+    server,user,password = parseArgs()
+    testWrapper.test_runMediaTest(server,user,password)
